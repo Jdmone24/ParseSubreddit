@@ -1,0 +1,2 @@
+# ParseSubreddit
+This code grabs the 500 most recent posts (or more if specified) from a subreddit. It then implements TextBlob's API which using various methods of NLP (Natural Language Processing) to compile meaningful data regarding the most mentioned names in that particular subreddit. This of course can be targetted for any parameters in NLP but my main focus was towards sports reddits to build meaningful data for the current most popular players and coaches being mentioned in the offseason (at the time).
