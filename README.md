@@ -1,2 +1,4 @@
 # ParseSubreddit
+Besides the technical part specifics below. This project was super helpful as helped me build a very well functioning framework for web scraping, parsing data off NLK which can be virtually targetted towards any data, on Reddit or not. For example - Twitter web scraping is fairly similar and just requires different syntax to interact with their API's but the main concepts still remain.
+
 This code grabs the 500 most recent posts (or more if specified) from a subreddit. It then implements TextBlob's API which using various methods of NLP (Natural Language Processing) to compile meaningful data regarding the most mentioned names in that particular subreddit. This of course can be targetted for any parameters in NLP but my main focus was towards sports reddits to build meaningful data for the current most popular players and coaches being mentioned in the offseason (at the time).
