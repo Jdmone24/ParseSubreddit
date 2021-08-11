@@ -1,0 +1,92 @@
+import praw
+from textblob import TextBlob
+import nltk
+import json
+
+
+
+reddit = praw.Reddit(
+  client_id='<add your reddit auth info here>',
+  client_secret='<add your reddit auth info here>',
+  user_agent='<add your reddit auth info here>',
+  username='<add your reddit auth info here>'',
+  password='<add your reddit auth info here>'
+)
+
+subreddit = reddit.subreddit('nyjets')
+new = subreddit.new(limit=500)
+  
+
+def get_data(new):
+  """Creating a dictonary using the PRAW API
+
+  We create an empty dictionary than append using the reddit PRAW for the appro
+  priate values. (post.title for the title, etc).
+  """
+
+  csv_dict = {'title': [], \
+               'id': [], \
+  }
+  for post in new:
+    csv_dict["title"].append(post.title)
+    csv_dict["id"].append(post.id)
+  
+  return csv_dict
+
+def create_csv(csvdata):
+  """ Converts CSV data into a string
+  Uused json.dumps to convert data for mass parsing 
+  """
+
+  with open('nyjetsdata.txt', 'w') as myfile:
+    myfile.write(json.dumps(csvdata))
+
+"""This searches through the generated .txt information after it has been successfully
+scrapped from the subreddit and compiled into the .txt (CSV) file. This function
+looks through the NLK phrases parsed and only outputs Noun phrases occuring at least 4 times.
+This avoids players only mentioned once or twice due to the data looking for the hottest offseason trends and players.
+
+"""
+
+def get_excel(jetsdata,floor=0):
+  with open(jetsdata, 'r') as file:
+    print("Breaking down data...\n")
+    input = file.read().replace('\n', ' ').replace(',',' ').replace(',',' ')
+    blob = TextBlob(input)
+    output = blob.noun_phrases
+
+    returndata = []
+    for term in set(output):
+      termcount = output.count(term)
+      if termcount > floor:
+        returndata.append((term, termcount))
+      else:
+        pass
+    return returndata
+
+def finaldata(exceldata):
+  """ Translates the textblog data to a txt file. 
+  
+  We translate the data into pairs so it is easily readable for humans and easy
+  to translate into EXCEL.
+  """
+  with open('exportdata.csv', 'w') as excel:
+    for pair in exceldata:
+      excel.write(f'{pair[0]}, {pair[1]}\n')
+
+
+# downloads if they are not already downloaded
+nltk.download('brown')
+nltk.download('punkt')
+
+# Call function to create dictionary
+csvdata = get_data(new)
+
+# Call function that converts the dictionary to CSV data (a string)
+create_csv(csvdata)
+
+# Cipher and return nouns phrases that occur at least 4 times
+exceldata = get_excel('nyjetsdata.txt', 4)
+
+# Call function to write the final data in the CSV we will use with excel
+finaldata(exceldata)
